@@ -38,8 +38,8 @@
     --tool: #4C6064;      --tool-bg: #E1E8E6;
 
     --scope-bg: #0B1B1E;
-    --scope-ring: rgba(150, 205, 198, 0.30);
-    --scope-label: rgba(170, 215, 208, 0.70);
+    --scope-ring: rgba(150, 205, 198, 0.42);
+    --scope-label: rgba(175, 220, 212, 0.85);
     --scope-sweep: 72, 204, 190;
 
     --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
@@ -628,17 +628,19 @@
     };
 
     // Storm layout in unit-radius coordinates: stratiform shield + a NE–SW squall line + isolated cells
+    // Narrow trailing stratiform band just behind (NW of) the line — most of the scope stays clear air
     const blobs = [
-      { x: 0.26, y: -0.08, s: 0.40, p: 24 },
-      { x: -0.12, y: 0.26, s: 0.36, p: 22 }
+      { x: -0.08, y: -0.10, s: 0.20, p: 19 },
+      { x: 0.12, y: -0.30, s: 0.17, p: 18 },
+      { x: -0.30, y: 0.12, s: 0.17, p: 18 }
     ];
     for (let i = 0; i < 11; i++) {
       const t = i / 10;
-      blobs.push({ x: -0.62 + 1.15 * t + (rand() - 0.5) * 0.08, y: 0.60 - 1.05 * t + (rand() - 0.5) * 0.08, s: 0.05 + rand() * 0.07, p: 40 + rand() * 16 });
+      blobs.push({ x: -0.58 + 1.08 * t + (rand() - 0.5) * 0.06, y: 0.56 - 0.98 * t + (rand() - 0.5) * 0.06, s: 0.035 + rand() * 0.045, p: 40 + rand() * 16 });
     }
     for (let i = 0; i < 7; i++) {
-      const a = rand() * Math.PI * 2, d = 0.35 + rand() * 0.5;
-      blobs.push({ x: Math.cos(a) * d, y: Math.sin(a) * d, s: 0.03 + rand() * 0.04, p: 26 + rand() * 14 });
+      const a = rand() * Math.PI * 2, d = 0.40 + rand() * 0.45;
+      blobs.push({ x: Math.cos(a) * d, y: Math.sin(a) * d, s: 0.022 + rand() * 0.028, p: 28 + rand() * 12 });
     }
 
     const buildEchoes = (size) => {
@@ -658,8 +660,8 @@
             if (e < 9) Z += Math.pow(10, b.p / 10) * Math.exp(-e);
           }
           if (Z <= 0) continue;
-          const dbz = 10 * Math.log10(Z) + (noise(x * 9 + 4, y * 9 + 4) - 0.5) * 10 + (noise(x * 23, y * 23) - 0.5) * 5;
-          const col = colorFor(dbz);
+          const dbz = 10 * Math.log10(Z) + (noise(x * 9 + 4, y * 9 + 4) - 0.5) * 6 + (noise(x * 23, y * 23) - 0.5) * 3;
+          const col = dbz >= 14 ? colorFor(dbz) : null;
           if (!col) continue;
           o.fillStyle = col;
           o.fillRect(px, py, step, step);
