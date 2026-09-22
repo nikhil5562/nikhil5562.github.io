@@ -1,0 +1,777 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Nikhil K Shaji — AI/ML engineer building AI tools for Kerala's monsoon: Gemini apps, a live climate dashboard, and deep-learning radar nowcasting.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Nikhil K Shaji — AI/ML Engineer">
+<meta property="og:description" content="Nikhil K Shaji — AI/ML engineer building AI tools for Kerala's monsoon: Gemini apps, a live climate dashboard, and deep-learning radar nowcasting.">
+<meta property="og:url" content="https://nikhil5562.github.io/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%230B1B1E'/%3E%3Ccircle cx='32' cy='32' r='20' fill='none' stroke='%2348CCBE' stroke-opacity='.45' stroke-width='2'/%3E%3Cpath d='M32 32 L32 4' stroke='%2348CCBE' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='44' cy='22' r='6' fill='%23E5BC00'/%3E%3C/svg%3E">
+<style>
+  :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Nikhil K Shaji</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --ground: #EDF1EF;
+    --surface: #F8FAF9;
+    --ink: #12292D;
+    --muted: #4C6064;
+    --line: #C8D4D1;
+    --accent: #0A6E6A;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #D5E8E5;
+
+    --live: #1D6F37;      --live-bg: #D9EEDF;
+    --proto: #875600;     --proto-bg: #F5E6C4;
+    --research: #1D4C86;  --research-bg: #DAE4F3;
+    --tool: #4C6064;      --tool-bg: #E1E8E6;
+
+    --scope-bg: #0B1B1E;
+    --scope-ring: rgba(150, 205, 198, 0.30);
+    --scope-label: rgba(170, 215, 208, 0.70);
+    --scope-sweep: 72, 204, 190;
+
+    --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0C1719;
+      --surface: #122124;
+      --ink: #E1EBE9;
+      --muted: #98AEAD;
+      --line: #25393C;
+      --accent: #47C3B6;
+      --accent-ink: #06201E;
+      --accent-soft: #143331;
+      --live: #7FD59A;      --live-bg: #15301E;
+      --proto: #F0C46C;     --proto-bg: #33280F;
+      --research: #93B9F0;  --research-bg: #15263C;
+      --tool: #A9BDBC;      --tool-bg: #1B2C2F;
+      --scope-bg: #061013;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0C1719;
+    --surface: #122124;
+    --ink: #E1EBE9;
+    --muted: #98AEAD;
+    --line: #25393C;
+    --accent: #47C3B6;
+    --accent-ink: #06201E;
+    --accent-soft: #143331;
+    --live: #7FD59A;      --live-bg: #15301E;
+    --proto: #F0C46C;     --proto-bg: #33280F;
+    --research: #93B9F0;  --research-bg: #15263C;
+    --tool: #A9BDBC;      --tool-bg: #1B2C2F;
+    --scope-bg: #061013;
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font: 400 17px/1.6 var(--body);
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 1100px;
+    margin-inline: auto;
+    padding-inline: clamp(16px, 4vw, 40px);
+  }
+  a { color: var(--accent); text-underline-offset: 3px; }
+  a:hover { text-decoration-thickness: 2px; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  h1, h2, h3, h4 { font-family: var(--display); text-wrap: balance; margin: 0; }
+  p { margin: 0; }
+
+  /* ── Top bar ─────────────────────────────────────── */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    padding-block: 22px;
+  }
+  .mark {
+    font: 700 15px/1 var(--display); letter-spacing: 0.02em;
+    color: var(--ink); text-decoration: none;
+  }
+  .topbar nav { display: flex; gap: 20px; flex-wrap: wrap; }
+  .topbar nav a {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+  }
+  .topbar nav a:hover { color: var(--accent); }
+
+  /* ── Hero ────────────────────────────────────────── */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+    padding-block: clamp(24px, 5vw, 56px) clamp(40px, 6vw, 72px);
+  }
+  .eyebrow {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .hero h1 {
+    font-size: clamp(46px, 7.4vw, 88px);
+    font-weight: 750;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    margin-top: 16px;
+  }
+  .thesis {
+    font-size: clamp(19px, 2.1vw, 23px);
+    line-height: 1.45;
+    max-width: 34ch;
+    margin-top: 22px;
+  }
+  .applying {
+    display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    margin-top: 22px;
+    font: 500 13px/1.4 var(--mono);
+    color: var(--muted);
+  }
+  .applying b { color: var(--ink); font-weight: 500; }
+  .applying .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font: 700 15px/1 var(--body);
+    padding: 13px 18px;
+    border-radius: 10px;
+    border: 1.5px solid var(--accent);
+    text-decoration: none;
+    cursor: pointer;
+    background: transparent;
+    color: var(--accent);
+  }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn:hover { filter: brightness(1.06); text-decoration: none; }
+
+  .scope-fig { margin: 0; display: grid; justify-items: center; gap: 14px; }
+  #scope { width: 100%; max-width: 400px; aspect-ratio: 1; display: block; }
+  .scope-cap {
+    display: grid; gap: 8px; justify-items: center; text-align: center;
+    font: 400 11.5px/1.4 var(--mono); color: var(--muted);
+  }
+  .ramp { display: flex; align-items: flex-end; gap: 2px; }
+  .ramp span {
+    display: grid; justify-items: center; gap: 4px;
+    font: 400 10px/1 var(--mono); color: var(--muted);
+  }
+  .ramp i { display: block; width: 26px; height: 7px; border-radius: 2px; }
+
+  /* ── Sections ────────────────────────────────────── */
+  section { padding-block: clamp(40px, 6vw, 72px); }
+  .sec-head { display: grid; gap: 10px; margin-bottom: 28px; }
+  .sec-head h2 { font-size: clamp(30px, 4vw, 42px); font-weight: 700; letter-spacing: -0.015em; line-height: 1.05; }
+  .sec-head p { color: var(--muted); max-width: 62ch; }
+
+  /* Why panel — the one lifted object on the page */
+  .why {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: clamp(22px, 3.5vw, 40px);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(24px, 4vw, 48px);
+  }
+  .why h3 {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 16px;
+  }
+  .why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+  .why li { padding-left: 22px; position: relative; max-width: 52ch; }
+  .why li::before {
+    content: ""; position: absolute; left: 0; top: 0.62em;
+    width: 9px; height: 9px; border-radius: 50%;
+    border: 2px solid var(--accent);
+  }
+
+  /* Work */
+  .group { margin-top: 44px; }
+  .group:first-of-type { margin-top: 0; }
+  .group-label {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted);
+    padding-bottom: 12px;
+  }
+  .proj {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 10px 36px;
+    padding-block: 28px;
+    border-top: 1px solid var(--line);
+  }
+  .proj-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+  .year { font: 500 13px/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+  .pill {
+    display: inline-flex; align-items: center;
+    font: 500 11px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 9px; border-radius: 999px;
+  }
+  .pill.live { color: var(--live); background: var(--live-bg); }
+  .pill.proto { color: var(--proto); background: var(--proto-bg); }
+  .pill.research { color: var(--research); background: var(--research-bg); }
+  .pill.tool { color: var(--tool); background: var(--tool-bg); }
+
+  .proj-body { display: grid; gap: 12px; min-width: 0; }
+  .proj h4 { font-size: clamp(21px, 2.4vw, 26px); font-weight: 650; letter-spacing: -0.01em; line-height: 1.15; }
+  .lede { color: var(--muted); font-size: 17px; max-width: 64ch; }
+  .proj ul { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; max-width: 70ch; }
+  .proj li::marker { color: var(--accent); }
+  .num { font-family: var(--mono); font-size: 0.9em; white-space: nowrap; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+  .tags li {
+    font: 400 12px/1 var(--mono); color: var(--muted);
+    padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px;
+  }
+  .links { display: flex; flex-wrap: wrap; gap: 8px 20px; font-weight: 700; font-size: 15px; }
+  .note { font-size: 14px; color: var(--muted); }
+
+  /* Skills */
+  .skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 28px 32px;
+  }
+  .skills h3 {
+    font: 500 12px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink); padding-bottom: 12px; margin-bottom: 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* Contact */
+  .contact {
+    display: grid; gap: 22px;
+    padding-block: clamp(48px, 7vw, 88px);
+    border-top: 1px solid var(--line);
+  }
+  .contact h2 { font-size: clamp(32px, 5vw, 56px); font-weight: 700; letter-spacing: -0.02em; line-height: 1.02; max-width: 18ch; }
+  .email-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; }
+  .email {
+    font: 500 clamp(17px, 2.2vw, 22px)/1.3 var(--mono);
+    color: var(--ink);
+    user-select: all;
+    overflow-wrap: anywhere;
+  }
+  footer {
+    padding-block: 24px 40px;
+    font: 400 12px/1.5 var(--mono); color: var(--muted);
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px;
+  }
+
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; }
+    .scope-fig { order: -1; }
+    #scope { max-width: 300px; }
+  }
+  @media (max-width: 680px) {
+    .why { grid-template-columns: 1fr; }
+    .proj { grid-template-columns: 1fr; }
+    .proj-meta { flex-direction: row; align-items: center; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="topbar">
+    <a class="mark" href="#top" id="top">NKS</a>
+    <nav aria-label="Sections">
+      <a href="#why">Why me</a>
+      <a href="#work">Work</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <div>
+      <p class="eyebrow">AI / ML Engineer</p>
+      <h1>Nikhil K Shaji</h1>
+      <p class="thesis">I build AI tools that make Kerala's monsoon readable — from Gemini-powered alert assistants to deep-learning radar nowcasting.</p>
+      <p class="applying"><span class="dot" aria-hidden="true"></span>Applying to <b>Build with AI Bootcamp 2026</b></p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/nikhil5562" target="_blank" rel="noopener">GitHub profile ↗</a>
+        <a class="btn" href="https://cwrdm-ai.github.io/kozhikode-climate-dashboard/" target="_blank" rel="noopener">Live climate dashboard ↗</a>
+        <a class="btn" href="#contact">Contact</a>
+      </div>
+    </div>
+
+    <figure class="scope-fig">
+      <canvas id="scope" role="img" aria-label="Illustration of a Doppler weather radar screen: a green sweep line rotates over range rings, passing a band of rain echoes coloured from blue for light rain to red for heavy convective cores."></canvas>
+      <figcaption class="scope-cap">
+        <span>Illustration · C-band radar PPI · rings every 50 km</span>
+        <span class="ramp" aria-label="Reflectivity colour scale in dBZ">
+          <span><i style="background:#019FF4"></i>10</span>
+          <span><i style="background:#02FD02"></i>20</span>
+          <span><i style="background:#008E00"></i>30</span>
+          <span><i style="background:#E5BC00"></i>40</span>
+          <span><i style="background:#FD0000"></i>50</span>
+          <span><i style="background:#BC0000"></i>60</span>
+          <span>dBZ</span>
+        </span>
+      </figcaption>
+    </figure>
+  </div>
+
+  <section id="why" aria-labelledby="why-h">
+    <div class="sec-head">
+      <h2 id="why-h">Why the Build with AI Bootcamp</h2>
+      <p>I already ship working tools with AI. Now I want to get much better at building <em>with agents</em> — and put that to work on Kerala's rain, flood and landslide problems.</p>
+    </div>
+    <div class="why">
+      <div>
+        <h3>What I bring</h3>
+        <ul>
+          <li>Two Gemini apps built end to end: a monsoon-alert assistant in Google AI Studio, and a retrieval-augmented assistant over IMD weather bulletins.</li>
+          <li>Daily practice with AI coding agents to plan, test and ship research code — my radar pipeline has unit tests and CI.</li>
+          <li>Real domain depth: Doppler radar, regional climate models and deep-learning nowcasting.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What I want to learn</h3>
+        <ul>
+          <li>Agent-first development in Antigravity — planning mode, workspaces and browser-verified builds.</li>
+          <li>Google Cloud agentic AI patterns to turn prototypes like my Monsoon Alert Companion into services people can rely on during the monsoon.</li>
+          <li>How Google Developer Experts structure, evaluate and ship agentic apps.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="work" aria-labelledby="work-h">
+    <div class="sec-head">
+      <h2 id="work-h">Selected work</h2>
+      <p>Seven projects, grouped by what they do. Every link goes to public code or a live demo.</p>
+    </div>
+
+    <div class="group">
+      <h3 class="group-label"><span>AI applications</span><span>2 projects</span></h3>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2025</span><span class="pill proto">Prototype</span></div>
+        <div class="proj-body">
+          <h4>Kerala Monsoon Alert Companion</h4>
+          <p class="lede">A conversational monsoon-advisory assistant for Kerala residents, built in Google AI Studio.</p>
+          <ul>
+            <li>Chat runs on Gemini 2.5 Flash with Google Search grounding, so answers show the live sources they came from.</li>
+            <li>Takes voice and image input alongside text, with adjustable model settings.</li>
+            <li>District dashboard of rain alerts, flood risk, dam and river levels across all 14 districts (sample data in this prototype).</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>Gemini API</li><li>Google AI Studio</li><li>Search grounding</li><li>React</li><li>TypeScript</li><li>Vite</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/kerala_monsoon" target="_blank" rel="noopener">Repository ↗</a>
+            <a href="https://aistudio.google.com/apps/189c1cf5-1d1d-42f8-be69-88d893abf0a9" target="_blank" rel="noopener">Open in AI Studio ↗</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2026</span><span class="pill tool">Working tool</span></div>
+        <div class="proj-body">
+          <h4>IMD Weather Assistant</h4>
+          <p class="lede">Ask plain-language questions over the India Meteorological Department's daily Kerala weather reports.</p>
+          <ul>
+            <li>Retrieval-augmented generation: report PDFs are chunked, embedded with bge-small into ChromaDB, and answered by Gemini with date filtering and cited sources.</li>
+            <li>Fed by collectors that save IMD's reports every day on a schedule — dating each file from its HTTP <code>Last-Modified</code> header, because IMD overwrites the same URLs daily.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>Gemini API</li><li>RAG</li><li>ChromaDB</li><li>sentence-transformers</li><li>Streamlit</li><li>Python</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/imd-weather-report" target="_blank" rel="noopener">Repository ↗</a>
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <div class="group">
+      <h3 class="group-label"><span>Climate &amp; radar science</span><span>4 projects</span></h3>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2026</span><span class="pill live">Live</span></div>
+        <div class="proj-body">
+          <h4>Susthira — Kozhikode Climate Projection Dashboard</h4>
+          <p class="lede">Local-body climate projections for Kozhikode District, 2000–2099, in the browser.</p>
+          <ul>
+            <li>Covers all <span class="num">78</span> local bodies — 70 grama panchayats, 7 municipalities and 1 corporation — from the CORDEX South Asia regional climate model ensemble.</li>
+            <li>Switch between RCP 2.6 and RCP 8.5 and scrub through the century: rainfall, temperature anomaly, diurnal range and a comfort index.</li>
+            <li>Area-weighted interpolation from model grid cells onto local-body boundaries, a Leaflet choropleth map and a rainwater-harvesting calculator.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>JavaScript</li><li>Chart.js</li><li>Leaflet</li><li>Python</li><li>GeoJSON</li><li>CORDEX</li>
+          </ul>
+          <p class="links">
+            <a href="https://cwrdm-ai.github.io/kozhikode-climate-dashboard/" target="_blank" rel="noopener">Live dashboard ↗</a>
+            <a href="https://github.com/cwrdm-ai/kozhikode-climate-dashboard" target="_blank" rel="noopener">Repository ↗</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2026</span><span class="pill research">Research</span></div>
+        <div class="proj-body">
+          <h4>3-D volumetric radar from ISRO's TERLS Doppler radar</h4>
+          <p class="lede">Rebuilds ISRO's 3-D gridded reflectivity product from raw polar Doppler Weather Radar scans.</p>
+          <ul>
+            <li>Converts MOSDAC Level-2B polar volumes into <span class="num">81 × 481 × 481</span> Cartesian cubes (<span class="num">1 km × 1 km × 250 m</span>) with dual-polarisation clutter filtering and velocity dealiasing.</li>
+            <li>Checked against ISRO's official L2C product on four scan pairs: recovers <span class="num">98.7%</span> of official echo cells (correlation <span class="num">0.71</span> where both have data), with the remaining coverage differences documented openly.</li>
+            <li>Detects and corrects silent quirks in the official files at load time — swapped lat/lon labels, zeroed sweep indices, bogus fill values — backed by unit tests and GitHub Actions CI.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>Python</li><li>Py-ART</li><li>wradlib</li><li>xarray</li><li>PyVista</li><li>pytest</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/terls-dwr-3d" target="_blank" rel="noopener">Repository ↗</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2025–26</span><span class="pill research">In progress</span></div>
+        <div class="proj-body">
+          <h4>3-D ConvLSTM radar nowcasting</h4>
+          <p class="lede">Deep learning that forecasts how storm echoes evolve in three dimensions, up to two hours ahead.</p>
+          <ul>
+            <li>Reads ten radar volumes at a 15-minute cadence and predicts the next eight — lead times <span class="num">T+15</span> to <span class="num">T+120 min</span>.</li>
+            <li>Adapted the published 3D-ConvLSTM model (Sun et al., 2022) to Kochi radar — built the preprocessing pipeline and migrated it from TensorFlow 1.14 to 2.x — then wrote my own TERLS implementation with a coverage-aware input channel.</li>
+            <li>Training and held-out evaluation are under way.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>TensorFlow</li><li>ConvLSTM</li><li>Python</li><li>NumPy</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/3D_ConvLSTM_Nowcasting" target="_blank" rel="noopener">My implementation ↗</a>
+            <a href="https://github.com/cwrdm-ai/3D-storm-nowcasting" target="_blank" rel="noopener">Kochi adaptation ↗</a>
+          </p>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2025</span><span class="pill tool">Working tool</span></div>
+        <div class="proj-body">
+          <h4>IMD Kochi radar &amp; satellite downloader</h4>
+          <p class="lede">Bulk-downloads Doppler radar and INSAT satellite imagery from IMD's Kochi archive.</p>
+          <ul>
+            <li><span class="num">18</span> products — reflectivity, velocity, dual-polarisation, rainfall intensity and satellite channels — filtered by product, date or date range.</li>
+            <li>Reads the archive's dynamically loaded file listing directly, files everything into date folders, and resumes safely after interruptions.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>Python</li><li>requests</li><li>BeautifulSoup</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/imd-kochi-data" target="_blank" rel="noopener">Repository ↗</a>
+          </p>
+        </div>
+      </article>
+    </div>
+
+    <div class="group">
+      <h3 class="group-label"><span>Computer vision</span><span>1 project</span></h3>
+
+      <article class="proj">
+        <div class="proj-meta"><span class="year">2023–24</span><span class="pill research">Research</span></div>
+        <div class="proj-body">
+          <h4>Facial emotion recognition</h4>
+          <p class="lede">Extended an open-source YOLO + RepVGG pipeline that finds faces and classifies eight facial expressions.</p>
+          <ul>
+            <li>Built a YOLOv8 auto-labelling tool to speed up dataset annotation.</li>
+            <li>Benchmarked the classifier and retrained RepVGG with Weights &amp; Biases hyperparameter sweeps.</li>
+            <li>Curated benchmark datasets from YouTube video, removing near-duplicate frames with DINOv2 embeddings.</li>
+          </ul>
+          <ul class="tags" aria-label="Tools">
+            <li>PyTorch</li><li>YOLOv7 / v8</li><li>RepVGG</li><li>DINOv2</li><li>Weights &amp; Biases</li>
+          </ul>
+          <p class="links">
+            <a href="https://github.com/nikhil5562/Emotion-Detection" target="_blank" rel="noopener">Emotion-Detection ↗</a>
+            <a href="https://github.com/nikhil5562/Auto-Labeling" target="_blank" rel="noopener">Auto-Labeling ↗</a>
+            <a href="https://github.com/nikhil5562/Image-benchmarking" target="_blank" rel="noopener">Image-benchmarking ↗</a>
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="skills" aria-labelledby="skills-h">
+    <div class="sec-head">
+      <h2 id="skills-h">Toolkit</h2>
+    </div>
+    <div class="skills">
+      <div>
+        <h3>AI &amp; LLM apps</h3>
+        <ul class="tags">
+          <li>Gemini API</li><li>Google AI Studio</li><li>Search grounding</li><li>RAG</li><li>ChromaDB</li><li>sentence-transformers</li><li>Streamlit</li><li>AI coding agents</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Deep learning</h3>
+        <ul class="tags">
+          <li>TensorFlow</li><li>PyTorch</li><li>ConvLSTM</li><li>YOLOv7 / v8</li><li>RepVGG</li><li>DINOv2</li><li>Weights &amp; Biases</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Weather &amp; geospatial</h3>
+        <ul class="tags">
+          <li>Py-ART</li><li>wradlib</li><li>xarray</li><li>NetCDF / CfRadial</li><li>CORDEX</li><li>GeoJSON</li><li>Leaflet</li><li>PyVista</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Engineering</h3>
+        <ul class="tags">
+          <li>Python</li><li>TypeScript</li><li>JavaScript</li><li>React</li><li>Chart.js</li><li>pytest</li><li>GitHub Actions</li><li>Web scraping</li><li>Task automation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact" aria-labelledby="contact-h">
+    <p class="eyebrow">Contact</p>
+    <h2 id="contact-h">Let's build something for the monsoon.</h2>
+    <div class="email-row">
+      <span class="email" id="email">nikhilkshaji@gmail.com</span>
+      <button class="btn primary" type="button" id="copy-email">Copy email</button>
+      <a class="btn" href="https://github.com/nikhil5562" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Nikhil K Shaji</span>
+    <span>The radar sweep above is an illustration, not live data.</span>
+  </footer>
+</div>
+
+<script>
+  /* ── Copy email ─────────────────────────────────── */
+  (() => {
+    const btn = document.getElementById('copy-email');
+    const emailEl = document.getElementById('email');
+    const label = btn.textContent;
+    const flash = (text) => { btn.textContent = text; setTimeout(() => { btn.textContent = label; }, 1800); };
+    const selectText = () => {
+      const range = document.createRange();
+      range.selectNodeContents(emailEl);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      flash('Press Ctrl+C');
+    };
+    btn.addEventListener('click', () => {
+      const text = emailEl.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => flash('Copied'), selectText);
+      } else {
+        selectText();
+      }
+    });
+  })();
+
+  /* ── Radar scope illustration ───────────────────── */
+  (() => {
+    const canvas = document.getElementById('scope');
+    if (!canvas || !canvas.getContext) return;
+    const ctx = canvas.getContext('2d');
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    // NWS-style reflectivity colour scale (dBZ threshold → colour)
+    const RAMP = [
+      [10, '#019FF4'], [15, '#0300F4'], [20, '#02FD02'], [25, '#01C501'],
+      [30, '#008E00'], [35, '#FDF802'], [40, '#E5BC00'], [45, '#FD9500'],
+      [50, '#FD0000'], [55, '#D40000'], [60, '#BC0000'], [65, '#F800FD']
+    ];
+    const colorFor = (dbz) => {
+      if (dbz < 10) return null;
+      let c = RAMP[0][1];
+      for (const [t, hex] of RAMP) if (dbz >= t) c = hex;
+      return c;
+    };
+
+    // Deterministic pseudo-random numbers so the storm looks the same every visit
+    const rng = (seed) => () => {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+    const rand = rng(20260606);
+    const hash = (i, j) => {
+      let h = (Math.imul(i, 374761393) + Math.imul(j, 668265263)) | 0;
+      h = Math.imul(h ^ (h >>> 13), 1274126177);
+      return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+    };
+    const noise = (x, y) => {
+      const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+      const u = xf * xf * (3 - 2 * xf), v = yf * yf * (3 - 2 * yf);
+      const a = hash(xi, yi), b = hash(xi + 1, yi), c = hash(xi, yi + 1), d = hash(xi + 1, yi + 1);
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    };
+
+    // Storm layout in unit-radius coordinates: stratiform shield + a NE–SW squall line + isolated cells
+    const blobs = [
+      { x: 0.26, y: -0.08, s: 0.40, p: 24 },
+      { x: -0.12, y: 0.26, s: 0.36, p: 22 }
+    ];
+    for (let i = 0; i < 11; i++) {
+      const t = i / 10;
+      blobs.push({ x: -0.62 + 1.15 * t + (rand() - 0.5) * 0.08, y: 0.60 - 1.05 * t + (rand() - 0.5) * 0.08, s: 0.05 + rand() * 0.07, p: 40 + rand() * 16 });
+    }
+    for (let i = 0; i < 7; i++) {
+      const a = rand() * Math.PI * 2, d = 0.35 + rand() * 0.5;
+      blobs.push({ x: Math.cos(a) * d, y: Math.sin(a) * d, s: 0.03 + rand() * 0.04, p: 26 + rand() * 14 });
+    }
+
+    const buildEchoes = (size) => {
+      const off = document.createElement('canvas');
+      off.width = off.height = size;
+      const o = off.getContext('2d');
+      const step = Math.max(2, Math.round(size / 170));
+      for (let py = 0; py < size; py += step) {
+        for (let px = 0; px < size; px += step) {
+          const x = ((px + step / 2) / size) * 2 - 1;
+          const y = ((py + step / 2) / size) * 2 - 1;
+          if (x * x + y * y > 0.96) continue;
+          let Z = 0;
+          for (const b of blobs) {
+            const dx = x - b.x, dy = y - b.y;
+            const e = (dx * dx + dy * dy) / (2 * b.s * b.s);
+            if (e < 9) Z += Math.pow(10, b.p / 10) * Math.exp(-e);
+          }
+          if (Z <= 0) continue;
+          const dbz = 10 * Math.log10(Z) + (noise(x * 9 + 4, y * 9 + 4) - 0.5) * 10 + (noise(x * 23, y * 23) - 0.5) * 5;
+          const col = colorFor(dbz);
+          if (!col) continue;
+          o.fillStyle = col;
+          o.fillRect(px, py, step, step);
+        }
+      }
+      return off;
+    };
+
+    let W = 0, echoes = null;
+    let ring = 'rgba(150,205,198,0.30)', label = 'rgba(170,215,208,0.70)', bg = '#0B1B1E', sweep = '72,204,190';
+    const readTheme = () => {
+      const cs = getComputedStyle(document.documentElement);
+      ring = cs.getPropertyValue('--scope-ring').trim() || ring;
+      label = cs.getPropertyValue('--scope-label').trim() || label;
+      bg = cs.getPropertyValue('--scope-bg').trim() || bg;
+      sweep = cs.getPropertyValue('--scope-sweep').trim() || sweep;
+    };
+
+    const REST_ANGLE = -Math.PI / 2 + 0.95;
+    const draw = (a) => {
+      if (!W || !echoes) return;
+      const c = W / 2, R = W / 2 - W * 0.012;
+      ctx.clearRect(0, 0, W, W);
+
+      ctx.save();
+      ctx.beginPath(); ctx.arc(c, c, R, 0, Math.PI * 2);
+      ctx.fillStyle = bg; ctx.fill(); ctx.clip();
+      ctx.globalAlpha = 0.9; ctx.drawImage(echoes, 0, 0); ctx.globalAlpha = 1;
+
+      // Sweep trail
+      const trail = 1.1;
+      if (ctx.createConicGradient) {
+        const g = ctx.createConicGradient(a - trail, c, c);
+        const f = trail / (Math.PI * 2);
+        g.addColorStop(0, `rgba(${sweep},0)`);
+        g.addColorStop(f, `rgba(${sweep},0.30)`);
+        g.addColorStop(Math.min(1, f + 0.001), `rgba(${sweep},0)`);
+        g.addColorStop(1, `rgba(${sweep},0)`);
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, W, W);
+      } else {
+        for (let k = 0; k < 24; k++) {
+          const a0 = a - trail + (trail * k) / 24;
+          ctx.beginPath(); ctx.moveTo(c, c);
+          ctx.arc(c, c, R, a0, a0 + trail / 24 + 0.01);
+          ctx.closePath();
+          ctx.fillStyle = `rgba(${sweep},${(0.30 * k) / 24})`;
+          ctx.fill();
+        }
+      }
+      ctx.strokeStyle = `rgba(${sweep},0.95)`;
+      ctx.lineWidth = Math.max(1.5, W * 0.004);
+      ctx.beginPath(); ctx.moveTo(c, c); ctx.lineTo(c + Math.cos(a) * R, c + Math.sin(a) * R); ctx.stroke();
+      ctx.restore();
+
+      // Range rings, crosshair and azimuth ticks
+      ctx.strokeStyle = ring;
+      ctx.lineWidth = Math.max(1, W * 0.0022);
+      for (let i = 1; i <= 4; i++) { ctx.beginPath(); ctx.arc(c, c, (R * i) / 4, 0, Math.PI * 2); ctx.stroke(); }
+      ctx.beginPath(); ctx.moveTo(c - R, c); ctx.lineTo(c + R, c); ctx.moveTo(c, c - R); ctx.lineTo(c, c + R); ctx.stroke();
+      for (let d = 0; d < 360; d += 30) {
+        const t = (d * Math.PI) / 180;
+        ctx.beginPath();
+        ctx.moveTo(c + Math.cos(t) * R * 0.95, c + Math.sin(t) * R * 0.95);
+        ctx.lineTo(c + Math.cos(t) * R, c + Math.sin(t) * R);
+        ctx.stroke();
+      }
+
+      // Range labels (50 km per ring)
+      ctx.fillStyle = label;
+      ctx.font = `${Math.max(9, Math.round(W * 0.026))}px "JetBrains Mono", ui-monospace, monospace`;
+      ctx.textBaseline = 'bottom';
+      for (let i = 1; i <= 4; i++) ctx.fillText(`${i * 50} km`, c + W * 0.012, c - (R * i) / 4 - W * 0.006);
+      ctx.textBaseline = 'top';
+      ctx.fillText('N', c + W * 0.012, c - R + W * 0.012);
+    };
+
+    let raf = 0, start = null, visible = true;
+    const frame = (t) => {
+      if (start === null) start = t;
+      draw(((t - start) / 1000) * ((Math.PI * 2) / 6) - Math.PI / 2);
+      raf = requestAnimationFrame(frame);
+    };
+    const play = () => {
+      cancelAnimationFrame(raf);
+      if (reduce.matches || !visible) { draw(REST_ANGLE); return; }
+      raf = requestAnimationFrame(frame);
+    };
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.round(canvas.clientWidth * dpr);
+      if (!w || w === W) return;
+      W = w; canvas.width = canvas.height = w;
+      echoes = buildEchoes(w);
+      draw(REST_ANGLE);
+    };
+
+    readTheme();
+    resize();
+    play();
+
+    if ('ResizeObserver' in window) new ResizeObserver(() => { resize(); if (reduce.matches || !visible) draw(REST_ANGLE); }).observe(canvas);
+    else window.addEventListener('resize', resize);
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((entries) => { visible = entries[0].isIntersecting; play(); }).observe(canvas);
+    }
+    const onTheme = () => { readTheme(); if (reduce.matches || !visible) draw(REST_ANGLE); };
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', onTheme);
+    new MutationObserver(onTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    reduce.addEventListener?.('change', play);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { if (reduce.matches || !visible) draw(REST_ANGLE); });
+  })();
+</script>
+</body>
+</html>
